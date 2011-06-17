@@ -1,0 +1,19 @@
+Config { font = "xft:Envy Code R:pixelsize=13,antialiasing=true"
+       , bgColor = "#3a3a3a"
+       , fgColor = "#d7d7d7"
+       , position = Top
+       , lowerOnStart = True
+       , commands = [ Run Weather "SAEZ" ["-t","Temp: <tempC> C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 36000
+                    , Run Network "eth0" ["-L","0","-H","80","--normal","#8fb28f","--high","#8fb28f"] 50
+		    , Run Network "wlan0" ["-L","0","-H","80","--normal","#8fb28f","--high","#8fb28f"] 50
+                    , Run MultiCpu ["-t","cpu: <total0> <total1>","-L","3","-H","75","--low","#8fb28f","--normal","#8fb28f","--high","#8fb28f"] 50
+                    , Run Memory ["-t","mem: <usedratio>%"] 50
+                    , Run Swap [] 10
+                    , Run Com "uname" ["-n","-o"] "" 36000
+    		    , Run Com "date" ["'+%a %D %R'"]  "" 10
+    		    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %StdinReader% | %multicpu% * %memory% * %swap% | }{ %eth0% | %SAEZ% | <fc=#dfdfaf>%date%</fc> | %uname%"
+       }
