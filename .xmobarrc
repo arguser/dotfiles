@@ -1,19 +1,24 @@
-Config { font = "xft:Envy Code R:pixelsize=13,antialiasing=true"
-       , bgColor = "#3a3a3a"
-       , fgColor = "#d7d7d7"
+Config { font = "xft:Envy Code R:pixelsize=13"
+       , bgColor = "black"
+       , fgColor = "grey"
        , position = Top
-       , lowerOnStart = True
-       , commands = [ Run Weather "SAEZ" ["-t","Temp: <tempC> C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 36000
-                    , Run Network "eth0" ["-L","0","-H","80","--normal","#8fb28f","--high","#8fb28f"] 50
-		    , Run Network "wlan0" ["-L","0","-H","80","--normal","#8fb28f","--high","#8fb28f"] 50
-                    , Run MultiCpu ["-t","cpu: <total0> <total1>","-L","3","-H","75","--low","#8fb28f","--normal","#8fb28f","--high","#8fb28f"] 50
-                    , Run Memory ["-t","mem: <usedratio>%"] 50
-                    , Run Swap [] 10
-                    , Run Com "uname" ["-n","-o"] "" 36000
-    		    , Run Com "date" ["'+%a %D %R'"]  "" 10
-    		    , Run StdinReader
+       , commands = [ Run MultiCpu ["-t","<fc=#1992fc>CPU</fc> <total>"] 10
+                    , Run Network "eth0" ["-t","<rx>|<tx>"] 30
+		    , Run Wireless "wlan0" ["-t","<essid> <quality>%"] 30
+                    , Run Memory ["-t","<fc=#1992fc>MEM</fc> <usedratio>%"] 30
+                    --, Run Swap ["-t", "<usedratio>%" ] 10
+                    , Run Date "<fc=#1992cf>DATE</fc> %a %d/%m/%y %R" "date" 10
+                    , Run BatteryP ["BAT0"]
+                                   ["-t", "<fc=#1992cf><acstatus></fc> <watts> <timeleft><fc=yellow><left></fc>%",
+                                    "-L", "10", "-H", "80", "-p", "3", "-n", "grey90",
+                                    "--", "-O", "AC", "-o", "BAT",
+                                    "-L", "-15", "-H", "-5",
+                                    "-f", "AC/online",
+                                    "-l", "red", "-m", "lightblue", "-h", "green"] 50
+                    --, Run CoreTemp ["-t","<core2>","-L", "40", "-H", "65","-l", "lightblue", "-n", "gray90", "-h", "red"] 50
+                    , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %StdinReader% | %multicpu% * %memory% * %swap% | }{ %eth0% | %SAEZ% | <fc=#dfdfaf>%date%</fc> | %uname%"
+       , template = "%StdinReader% }{ %multicpu% · %memory% · <fc=#1992cf>NET</fc> %wlan0wi% - %eth0% · %date% · %battery%"
        }
