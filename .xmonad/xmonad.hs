@@ -28,55 +28,15 @@ import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
-
  
--- The preferred terminal program, which is used in a binding below and by
--- certain contrib modules.
---
-myTerminal      = "gnome-terminal"
+myTerminal      = "urxvt"
  
--- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+myFocusFollowsMouse = False 
   
--- modMask lets you specify which modkey you want to use. The default
--- is mod1Mask ("left alt").  You may also consider using mod3Mask
--- ("right alt"), which does not conflict with emacs keybindings. The
--- "windows key" is usually mod4Mask.
---
 myModMask       = mod4Mask
- 
--- NOTE: from 0.9.1 on numlock mask is set automatically. The numlockMask
--- setting should be removed from configs.
---
--- You can safely remove this even on earlier xmonad versions unless you
--- need to set it to something other than the default mod2Mask, (e.g. OSX).
---
--- The mask for the numlock key. Numlock status is "masked" from the
--- current modifier status, so the keybindings will work with numlock on or
--- off. You may need to change this on some systems.
---
--- You can find the numlock modifier by running "xmodmap" and looking for a
--- modifier with Num_Lock bound to it:
---
--- > $ xmodmap | grep Num
--- > mod2        Num_Lock (0x4d)
---
--- Set numlockMask = 0 if you don't have a numlock key, or want to treat
--- numlock status separately.
---
--- myNumlockMask   = mod2Mask -- deprecated in xmonad-0.9.1
-------------------------------------------------------------
- 
- 
--- The default number of workspaces (virtual screens) and their names.
--- By default we use numeric strings, but any string may be used as a
--- workspace name. The number of workspaces is determined by the length
--- of this list.
---
--- A tagging example:
 
--- Colors
+myWorkspaces    = ["  1  ","  2  ","  3  ","  4  "]
 
 --- Main Colours
 myFgColor = "#DCDCCC"
@@ -94,15 +54,13 @@ myHiddenEmptyWsFgColor = "#8F8F8F"
 myUrgentWsBgColor = "#DCA3A3"
 myTitleFgColor = myFgColor
 --
--- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
---
-myWorkspaces    = ["1","2","3","4"]
+
  
 -- Border colors for unfocused and focused windows, respectively.
 --
-myActiveBorderColor = myCurrentWsBgColor
+myActiveBorderColor = "#1992cf" 
 myInactiveBorderColor = "#262626"
-myBorderWidth = 2
+myBorderWidth = 1
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -111,18 +69,23 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
  
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
- 
+    -- lock screen
+    , ((0, 0x1008ff2d                    ), spawn "xlock")
+    -- activate/deactivate bluetooth/wireless
+    , ((0, 0x1008ff95			 ), spawn "sudo set_rf")
+    -- Fn+F5 suspends with pm-suspend
+    , ((0,0x1008ff2f			 ), spawn "sudo pm-suspend")
+    -- Power for poweroff 
+    , ((0,0x1008ff2a			 ), spawn "sudo poweroff")
+
     -- screenshot screen
-    , ((modm,               xK_Print     ), spawn "/usr/bin/screenshot scr")
+    , ((modm,               xK_Print     ), spawn "scrot -e 'mv $f ~/picts/shots'")
 
     -- screenshot window or area
-    , ((modm .|. shiftMask, xK_Print     ), spawn "/usr/bin/screenshot win")
+    , ((modm .|. shiftMask, xK_Print     ), spawn "scrot -s -e'mv $f ~/picts/shots'")
 
-    -- launch dmenu
-    , ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
- 
-    -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
+    -- launch dmenu-xft
+    , ((modm,               xK_p     ), spawn "dmenu_run -nb black -nf grey70 -sb '#1992cf' -sf white -p wha? -fn 'Envy Code R:pixelsize=15'")
  
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
@@ -172,7 +135,17 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Deincrement the number of windows in the master area
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
  
-    -- Toggle the status bar gap
+    -- Audio control. See <X11/XF86keysym.h>
+    -- XF86XK_AudioPlay
+    , ((0, 0x1008FF14),                spawn "ncmpcpp toggle")
+    , ((0, 0x1008FF15),                spawn "ncmpcpp stop")
+    -- XF86XK_AudioPrev, XF86XK_Prev
+    , ((0, 0x1008FF16),                spawn "ncmpcpp prev")
+    , ((0, 0x1008FF26),                spawn "ncmpcpp prev")
+    -- XF86XK_AudioNext, XF86XK_Next
+    , ((0, 0x1008FF17),                spawn "ncmpcpp next")
+    , ((0, 0x1008FF27),                spawn "ncmpcpp next")
+
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
     -- See also the statusBar function from Hooks.DynamicLog.
     --
@@ -186,20 +159,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ]
     ++
  
-    --
-    -- mod-[1..9], Switch to workspace N
-    --
-    -- mod-[1..9], Switch to workspace N
-    -- mod-shift-[1..9], Move client to workspace N
-    --
     [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
  
-    --
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
     --
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
@@ -334,12 +298,12 @@ main = do
          , layoutHook = avoidStruts $ layoutHook defaults 
          , logHook = dynamicLogWithPP $ xmobarPP{
 						  ppOutput = hPutStrLn xmproc
-						  , ppTitle = xmobarColor "#8cd0d3" "" . shorten 50
-						  , ppCurrent = xmobarColor "#dca3a3" ""
-						  , ppVisible = xmobarColor "#c8e7a8" ""
-						  , ppHidden = xmobarColor "#e3ceab" ""
+						  , ppTitle = xmobarColor "#1992cf" "" . shorten 50
+						  , ppCurrent = xmobarColor "#FFFFFF" "#1992cf"
+						  , ppVisible = xmobarColor "#FFFFFF" "#19A2af" 
+						  , ppHidden = xmobarColor "#8f8f8f" "#0066a1"
 						  , ppHiddenNoWindows = xmobarColor "#8F8F8F" ""
-						  , ppUrgent = xmobarColor "#000000" ""
+						  , ppUrgent = xmobarColor "#FFFFFF" "#DCA3A3"
 						  } 
          }
 
@@ -357,11 +321,9 @@ defaults = defaultConfig {
         focusFollowsMouse  = myFocusFollowsMouse,
         borderWidth        = myBorderWidth,
         modMask            = myModMask,
-        -- numlockMask deprecated in 0.9.1
-        -- numlockMask        = myNumlockMask,
         workspaces         = myWorkspaces,
-        normalBorderColor  = myActiveBorderColor,
-        focusedBorderColor = myInactiveBorderColor,
+        normalBorderColor  = "black",
+        focusedBorderColor = "#1992cf",
  
       -- key bindings
         keys               = myKeys,
