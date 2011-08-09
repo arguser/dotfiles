@@ -1,9 +1,10 @@
 Config { font = "xft:Envy Code R:pixelsize=13"
-       , bgColor = "black"
+       , bgColor = "#202020"
        , fgColor = "grey"
        , position = Top
        , commands = [ Run MultiCpu ["-t","<fc=#1992fc>CPU</fc> <total>%"] 10
-                    , Run Network "wlan0" ["-t","<rx>↓<tx>↑"] 30
+                    --, Run Network "wlan0" ["-t","<rx>↓<tx>↑"] 30
+                    , Run Network "eth0" ["-t","<rx>↓<tx>↑"] 30
 		    , Run Wireless "wlan0" ["-t","<essid> <quality>%"] 30
                     , Run Memory ["-t","<fc=#1992fc>MEM</fc> <usedratio>%"] 30
                     --, Run Swap ["-t", "<usedratio>%" ] 10
@@ -20,5 +21,6 @@ Config { font = "xft:Envy Code R:pixelsize=13"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %multicpu% · %memory% · <fc=#1992cf>NET</fc> %wlan0wi% - %wlan0% · %date% · %battery%"
+       --, template = "%StdinReader% }{ %multicpu% > %memory% > <fc=#1992cf>WLAN0</fc> %wlan0wi% > %wlan0% > %date% > %battery%"
+       , template = "%StdinReader% }{ %multicpu% > %memory% > <fc=#1992cf>ETH0</fc> %eth0% > %date% > %battery%"
        }

@@ -54,17 +54,29 @@ myTerminal      = "urxvt"
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = False
 
+-------------------
+--Super as Modkey--
+-------------------
+
 myModMask       = mod4Mask
+
+--------------
+--Workspaces--
+--------------
 
 myWorkspaces    = ["  1  ","  2  ","  3  ","  4  "]
 
---- Main Colours
+---------------
+--Main Colors--
+---------------
 myFgColor = "#DCDCCC"
 myBgColor = "#3f3f3f"
 myHighlightedFgColor = myFgColor
 myHighlightedBgColor = "#7F9F7F"
 
---- Ws Stuff
+---------------------
+--Workspaces Colors--
+---------------------
 myCurrentWsFgColor = myHighlightedFgColor
 myCurrentWsBgColor = myHighlightedBgColor
 myVisibleWsFgColor = myBgColor
@@ -73,18 +85,17 @@ myHiddenWsFgColor = myHighlightedFgColor
 myHiddenEmptyWsFgColor = "#8F8F8F"
 myUrgentWsBgColor = "#DCA3A3"
 myTitleFgColor = myFgColor
---
-
-
--- Border colors for unfocused and focused windows, respectively.
---
+kk
+-----------------
+--Border Colors--
+-----------------
 myActiveBorderColor = "#1992cf"
 myInactiveBorderColor = "#262626"
-myBorderWidth = 1
+myBorderWidth = 2
 
-------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
---
+-------------
+--Key Binds--
+-------------
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
@@ -105,10 +116,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_Print     ), spawn "scrot -s -e'mv $f ~/picts/shots'")
 
     -- launch dmenu-xft
-    , ((modm,               xK_p     ), spawn "dmenu_run -nb black -nf grey70 -sb '#1992cf' -sf white -p wha? -fn 'Envy Code R:pixelsize=15'")
+    , ((modm,               xK_p     ), spawn "dmenu_run -nb '#202020' -nf grey70 -sb '#1992cf' -sf white -p wha? -fn 'Envy Code R:pixelsize=15'")
 
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
+
+
     -----------------------
     --Layout Control Keys--
     -----------------------
@@ -211,9 +224,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 
-------------------------------------------------------------------------
--- Mouse bindings: default actions bound to mouse events
---
+------------------
+--Mouse Bindings--
+------------------
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- mod-button1, Set the window to floating mode and move by dragging
@@ -229,6 +242,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
+
 ----------------------
 --Layout definitions--
 ----------------------
@@ -259,6 +273,7 @@ myManageHook = composeAll [ className =? "MPlayer"        --> doFloat
                           , className =? "Gimp"           --> doFloat
                           , className =? "feh"            --> doFloat
                           , className =? "Nautilus"       --> doFloat
+                          , className =? "Lazarus"        --> doFloat
                           , resource  =? "desktop_window" --> doIgnore
                           , resource  =? "kdesktop"       --> doIgnore
                           , insertPosition    Below Newer
@@ -266,18 +281,21 @@ myManageHook = composeAll [ className =? "MPlayer"        --> doFloat
                           --, className =? "Firefox"        --> doShift "  1  "
                           ]
 
-------------------------------------------------------------------------
---Tab Theme
+--------------
+--Tab Colors--
+--------------
 tabTheme = defaultTheme { decoHeight = 14
                         , activeColor = "#303030"
                         , activeBorderColor = "#404040"
-                        , activeTextColor = "#050505"
-                        , inactiveTextColor = "#454545"
+                        , activeTextColor = "#1992cf"
+                        , inactiveTextColor = "#8f8f8f"
                         , inactiveColor = "#252525"
                         , inactiveBorderColor = "#404040"
                         }
 
---Gristuff
+---------------
+--Grid Config--
+---------------
 myGSConfig = defaultGSConfig { gs_cellwidth = 160 }
 
 -- Event handling
@@ -323,10 +341,6 @@ myLogHook = return ()
 --
 myStartupHook = return ()
 
-------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
-
--- Run xmonad with the settings you specify. No need to modify this.
 --
 
 main = do
@@ -361,8 +375,8 @@ defaults = defaultConfig {
         borderWidth        = myBorderWidth,
         modMask            = myModMask,
         workspaces         = myWorkspaces,
-        normalBorderColor  = "black",
-        focusedBorderColor = "#1992cf",
+        normalBorderColor  = myInactiveBorderColor,
+        focusedBorderColor = myActiveBorderColor,
 
       -- key bindings
         keys               = myKeys,
