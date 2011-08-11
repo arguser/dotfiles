@@ -16,6 +16,9 @@ To Do:
 
 * Zsh
 * Vim
+* Vimperator
+* MPD
+* Ncmpcpp
 
 Work in Progress:
 
