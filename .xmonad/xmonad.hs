@@ -85,7 +85,6 @@ myHiddenWsFgColor = myHighlightedFgColor
 myHiddenEmptyWsFgColor = "#8F8F8F"
 myUrgentWsBgColor = "#DCA3A3"
 myTitleFgColor = myFgColor
-kk
 -----------------
 --Border Colors--
 -----------------
@@ -121,6 +120,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
 
+    -------------------
+    --Volume Keybinds--
+
+    , ((0,0x1008ff13                 ), spawn "amixer sset 'Master' 5%+,5%+")
+    , ((0,0x1008ff11                 ), spawn "amixer sset 'Master' 5%-,5%-")
 
     -----------------------
     --Layout Control Keys--
@@ -227,6 +231,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 ------------------
 --Mouse Bindings--
 ------------------
+
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- mod-button1, Set the window to floating mode and move by dragging
@@ -246,6 +251,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 ----------------------
 --Layout definitions--
 ----------------------
+
 myLayout = windowNavigation $ addTabs shrinkText tabTheme $
             tall ||| mtall ||| full
                 where
@@ -268,7 +274,11 @@ myLayout = windowNavigation $ addTabs shrinkText tabTheme $
 --
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
---
+
+-----------------
+--Windows Rules--
+-----------------
+
 myManageHook = composeAll [ className =? "MPlayer"        --> doFloat
                           , className =? "Gimp"           --> doFloat
                           , className =? "feh"            --> doFloat
@@ -284,6 +294,7 @@ myManageHook = composeAll [ className =? "MPlayer"        --> doFloat
 --------------
 --Tab Colors--
 --------------
+
 tabTheme = defaultTheme { decoHeight = 14
                         , activeColor = "#303030"
                         , activeBorderColor = "#404040"
@@ -296,6 +307,7 @@ tabTheme = defaultTheme { decoHeight = 14
 ---------------
 --Grid Config--
 ---------------
+
 myGSConfig = defaultGSConfig { gs_cellwidth = 160 }
 
 -- Event handling
@@ -309,6 +321,11 @@ myGSConfig = defaultGSConfig { gs_cellwidth = 160 }
 -- It will add EWMH event handling to your custom event hooks by
 -- combining them with ewmhDesktopsEventHook.
 --
+
+------------------
+--Event Handling--
+------------------
+
 myEventHook = mempty
 
 ------------------------------------------------------------------------
@@ -323,6 +340,11 @@ myEventHook = mempty
 -- It will add EWMH logHook actions to your custom log hook by
 -- combining it with ewmhDesktopsLogHook.
 --
+
+---------------------------
+--Status Bars and Logging--
+---------------------------
+
 myLogHook = return ()
 
 ------------------------------------------------------------------------
@@ -339,9 +361,16 @@ myLogHook = return ()
 -- It will add initialization of EWMH support to your custom startup
 -- hook by combining it with ewmhDesktopsStartup.
 --
+
+-------------------
+--Startup Actions--
+-------------------
+
 myStartupHook = return ()
 
---
+----------------------
+--XMobar Integration--
+----------------------
 
 main = do
   xmproc <- spawnPipe "xmobar"
@@ -352,7 +381,7 @@ main = do
 						  ppOutput = hPutStrLn xmproc
 						  , ppTitle = xmobarColor "#1992cf" "" . shorten 40
 						  , ppCurrent = xmobarColor "#FFFFFF" "#1992cf"
-						  , ppVisible = xmobarColor "#FFFFFF" "#19A2af" . wrap "<" ">"
+						  , ppVisible = xmobarColor "#FFFFFF" "#166cf"--"#19A2af"
 						  , ppHidden = xmobarColor "#8f8f8f" "#0066a1"
 						  , ppHiddenNoWindows = xmobarColor "#8F8F8F" ""
 						  , ppUrgent = xmobarColor "#FFFFFF" "#DCA3A3" . wrap "{" "}"
@@ -365,9 +394,10 @@ main = do
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
 -- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
+
+--------------------------
+--Configuration Settings--
+--------------------------
 defaults = defaultConfig {
       -- simple stuff
         terminal           = myTerminal,

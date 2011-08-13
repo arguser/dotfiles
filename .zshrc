@@ -44,7 +44,7 @@ autoload -U compinit promptinit colors && colors
 compinit
 promptinit
 
-PROMPT="%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%1~ %{$reset_color%}%#"
+PROMPT="%{$fg[blue]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%1~ %{$reset_color%}>> "
 
 setopt completealiases
 bindkey -v
