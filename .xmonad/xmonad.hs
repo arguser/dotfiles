@@ -16,12 +16,25 @@
 import XMonad
 --Xmobar
 import XMonad.Hooks.DynamicLog
+-----------
+--Layouts--
+-----------
+--No Borders
+import XMonad.Layout.NoBorders
 --Rezise
 import XMonad.Layout.ResizableTile
 --Tabs
 import XMonad.Layout.Tabbed
 --Names
 import XMonad.Layout.Named
+--Sub layouts
+import XMonad.Layout.SubLayouts
+import XMonad.Layout.Simplest
+--Window Navigator
+import XMonad.Layout.WindowNavigation
+---------
+--Hooks--
+---------
 --Urgents
 import XMonad.Hooks.UrgencyHook
 --Grid Selection
@@ -32,14 +45,11 @@ import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageHelpers
 --Apps Workspaces
 import XMonad.Hooks.ManageDocks(avoidStruts, manageDocks)
---Sub layours
-import XMonad.Layout.SubLayouts
-import XMonad.Layout.Simplest
---Window Navigator
-import XMonad.Layout.WindowNavigation
 --Figure out what this about
 import XMonad.Util.Run(spawnPipe)
+--Extra Keys
 import XMonad.Util.EZConfig(additionalKeys)
+
 import System.IO
 import Data.Monoid
 --Exit
@@ -252,7 +262,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 --Layout definitions--
 ----------------------
 
-myLayout = windowNavigation $ addTabs shrinkText tabTheme $
+myLayout = smartBorders $ windowNavigation $ addTabs shrinkText tabTheme $
             tall ||| mtall ||| full
                 where
                     rt = ResizableTall 1 (3/100) (1/2) []
@@ -279,7 +289,8 @@ myLayout = windowNavigation $ addTabs shrinkText tabTheme $
 --Windows Rules--
 -----------------
 
-myManageHook = composeAll [ className =? "MPlayer"        --> doFloat
+myManageHook = composeAll [ isFullscreen                  --> doFullFloat
+                          , className =? "MPlayer"        --> doFloat
                           , className =? "Gimp"           --> doFloat
                           , className =? "feh"            --> doFloat
                           , className =? "Nautilus"       --> doFloat
