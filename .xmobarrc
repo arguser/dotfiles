@@ -17,12 +17,12 @@ Config { font = "xft:Envy Code R:pixelsize=13"
                                     "-f", "AC/online",
                                     "-l", "red", "-m", "lightblue", "-h", "green"] 50
                     --, Run CoreTemp ["-t","<core4>","-L", "40", "-H", "65","-l", "lightblue", "-n", "gray90", "-h", "red"] 50
-                    , Run DiskU [("/mnt/alot","<free>")] ["-L", "20", "-H", "50", "-m", "1", "-p", "3"] 50
+                    , Run DiskU [("/mnt/alot","<freep>%")] ["-L", "20", "-H", "50", "-m", "1", "-p", "3"] 50
                     --, Run DiskIO [("/", "<read> <write>")] [] 30
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
        --, template = "%StdinReader% }{ %multicpu% > %memory% > <fc=#1992cf>WLAN0</fc> %wlan0wi% > %wlan0% > %date% > %battery%"
-       , template = "%StdinReader% }{ >> <fc=#1992fc>CPU</fc> %multicpu% > <fc=#1992cf>HDD</fc> %disku% > <fc=#1992cf>MEM</fc> %memory% > <fc=#1992cf>ETH0</fc> %eth0% > %date% > %battery%"
+       , template = "%StdinReader% }{ >> <fc=#1992fc>CPU</fc> %multicpu% > <fc=#1992cf>HDD</fc>%disku% > <fc=#1992cf>MEM</fc> %memory% > <fc=#1992cf>ETH0</fc> %eth0% > %date% > %battery%"
        }
