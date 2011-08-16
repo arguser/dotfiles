@@ -14,8 +14,6 @@
 
 --Xmonad
 import XMonad
---Xmobar
-import XMonad.Hooks.DynamicLog
 -----------
 --Layouts--
 -----------
@@ -47,6 +45,12 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ManageDocks(avoidStruts, manageDocks)
 --Figure out what this about
 import XMonad.Util.Run(spawnPipe)
+--Xmobar
+import XMonad.Hooks.DynamicLog
+
+---------
+--Utils--
+---------
 --Extra Keys
 import XMonad.Util.EZConfig(additionalKeys)
 
@@ -79,27 +83,30 @@ myWorkspaces    = ["  1  ","  2  ","  3  ","  4  "]
 ---------------
 --Main Colors--
 ---------------
-myFgColor = "#DCDCCC"
-myBgColor = "#3f3f3f"
-myHighlightedFgColor = myFgColor
-myHighlightedBgColor = "#7F9F7F"
+myFgColor = "#1992cf"
+myBgColor = "#202020"
+myHighlightedFgColor = "#FFFFFF"
+myHighlightedBgColor = myFgColor
 
 ---------------------
 --Workspaces Colors--
 ---------------------
 myCurrentWsFgColor = myHighlightedFgColor
 myCurrentWsBgColor = myHighlightedBgColor
-myVisibleWsFgColor = myBgColor
-myVisibleWsBgColor = "#CCDC90"
-myHiddenWsFgColor = myHighlightedFgColor
-myHiddenEmptyWsFgColor = "#8F8F8F"
-myUrgentWsBgColor = "#DCA3A3"
+myVisibleWsFgColor = myHighlightedFgColor
+myVisibleWsBgColor = "#1666cf"
+myHiddenWsFgColor = "#909090"
+myHiddenWsBgColor = "#0066a1"
+myHiddenEmptyWsFgColor = myHiddenWsFgColor
+myHiddenEmptyWsBgColor = myBgColor
+myUrgentWsFgColor = myHighlightedFgColor
+myUrgentWsBgColor = "#6f6f6f"
 myTitleFgColor = myFgColor
 -----------------
 --Border Colors--
 -----------------
-myActiveBorderColor = "#1992cf"
-myInactiveBorderColor = "#262626"
+myActiveBorderColor = myFgColor
+myInactiveBorderColor = myBgColor
 myBorderWidth = 2
 
 -------------
@@ -385,27 +392,20 @@ myStartupHook = return ()
 
 main = do
   xmproc <- spawnPipe "xmobar"
-  xmonad $ defaults {
+  xmonad $ withUrgencyHook NoUrgencyHook $ defaults {
          manageHook = manageDocks <+> manageHook defaults
          , layoutHook = avoidStruts $ layoutHook defaults
          , logHook = dynamicLogWithPP $ xmobarPP{
 						  ppOutput = hPutStrLn xmproc
-						  , ppTitle = xmobarColor "#1992cf" "" . shorten 40
-						  , ppCurrent = xmobarColor "#FFFFFF" "#1992cf"
-						  , ppVisible = xmobarColor "#FFFFFF" "#166cf"--"#19A2af"
-						  , ppHidden = xmobarColor "#8f8f8f" "#0066a1"
-						  , ppHiddenNoWindows = xmobarColor "#8F8F8F" ""
-						  , ppUrgent = xmobarColor "#FFFFFF" "#DCA3A3" . wrap "{" "}"
-                                                  , ppSep    = xmobarColor "#1992cf" "" " >> "
+						  , ppTitle = xmobarColor myTitleFgColor "" . shorten 40
+						  , ppCurrent = xmobarColor myCurrentWsFgColor myCurrentWsBgColor
+						  , ppVisible = xmobarColor myHighlightedFgColor myVisibleWsBgColor
+						  , ppHidden = xmobarColor myHiddenWsFgColor myHiddenWsBgColor
+						  , ppHiddenNoWindows = xmobarColor myHiddenEmptyWsFgColor myHiddenEmptyWsBgColor
+						  , ppUrgent = xmobarColor myUrgentWsFgColor myUrgentWsBgColor
+                                                  , ppSep    = xmobarColor myHiddenWsFgColor "" " >> "
 						  }
          }
-
-
-
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
-
 --------------------------
 --Configuration Settings--
 --------------------------

@@ -1,6 +1,6 @@
 Config { font = "xft:Envy Code R:pixelsize=13"
        , bgColor = "#202020"
-       , fgColor = "grey"
+       , fgColor = "#909090"
        , position = Top
        , commands = [ Run MultiCpu ["-t","<total>%"] 10
                     --, Run Network "wlan0" ["-t","<rx>↓<tx>↑"] 30
