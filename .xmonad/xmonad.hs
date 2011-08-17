@@ -94,13 +94,13 @@ myHighlightedBgColor = myFgColor
 myCurrentWsFgColor = myHighlightedFgColor
 myCurrentWsBgColor = myHighlightedBgColor
 myVisibleWsFgColor = myHighlightedFgColor
-myVisibleWsBgColor = "#1666cf"
+myVisibleWsBgColor = "#77C3E7"
 myHiddenWsFgColor = "#909090"
-myHiddenWsBgColor = "#0066a1"
+myHiddenWsBgColor = "#085D87"
 myHiddenEmptyWsFgColor = myHiddenWsFgColor
 myHiddenEmptyWsBgColor = myBgColor
 myUrgentWsFgColor = myHighlightedFgColor
-myUrgentWsBgColor = "#6f6f6f"
+myUrgentWsBgColor = "#4FB5E7"
 myTitleFgColor = myFgColor
 -----------------
 --Border Colors--
@@ -402,7 +402,7 @@ main = do
 						  , ppVisible = xmobarColor myHighlightedFgColor myVisibleWsBgColor
 						  , ppHidden = xmobarColor myHiddenWsFgColor myHiddenWsBgColor
 						  , ppHiddenNoWindows = xmobarColor myHiddenEmptyWsFgColor myHiddenEmptyWsBgColor
-						  , ppUrgent = xmobarColor myUrgentWsFgColor myUrgentWsBgColor
+						  , ppUrgent = xmobarColor myUrgentWsFgColor myUrgentWsBgColor . xmobarStrip
                                                   , ppSep    = xmobarColor myHiddenWsFgColor "" " >> "
 						  }
          }
