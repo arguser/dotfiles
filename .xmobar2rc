@@ -1,0 +1,17 @@
+Config { font = "xft:Envy Code R:pixelsize=13"
+       , bgColor = "#202020"
+       , fgColor = "#909090"
+       , position = Bottom
+       , border = TopB
+       , borderColor = "#909090"
+       , lowerOnStart = True
+       , commands = [Run Uptime ["-t","<fc=#6D9EAB>Up</fc> <days> <hours> <minutes>", "-S","True"] 60
+                    , Run Network "wlan0" ["-t","<rx>↓<tx>↑"] 30
+                    , Run Wireless "wlan0" ["-t","<quality>%"] 30 
+                    , Run Network "eth0" ["-t","<rx>↓<tx>↑"] 30
+                    , Run MPD ["-t", "<state> <statei> <artist> - <album> - <title> <lapsed>/<length>", "--", "-P", ">>", "-Z", "|", "-S", "><"] 10
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "<fc=#6D9EAB>MPD</fc> %mpd% }{ >> <fc=#6D9EAB>WLAN0</fc> %wlan0wi% %wlan0% > <fc=#6D9EAB>ETH0</fc> %eth0% > %uptime%"
+       }

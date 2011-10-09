@@ -2,27 +2,25 @@ Config { font = "xft:Envy Code R:pixelsize=13"
        , bgColor = "#202020"
        , fgColor = "#909090"
        , position = Top
+       , border = NoBorder
+       , borderColor = "#202020"
+       , lowerOnStart = True
        , commands = [ Run MultiCpu ["-t","<total>%"] 10
-                    --, Run Network "wlan0" ["-t","<rx>↓<tx>↑"] 30
-                    , Run Network "eth0" ["-t","<rx>↓<tx>↑"] 30
-		    , Run Wireless "wlan0" ["-t","<essid> <quality>%"] 30
                     , Run Memory ["-t","<usedratio>%"] 30
-                    --, Run Swap ["-t", "<usedratio>%" ] 10
-                    , Run Date "<fc=#1992cf>DATE</fc> %a %d/%m/%y %R" "date" 10
+                    , Run Date "%a %d/%m/%y %R" "date" 10
                     , Run BatteryP ["BAT0"]
-                                   ["-t", "<fc=#1992cf><acstatus></fc> <watts> <timeleft><fc=yellow><left></fc>%",
+                                   ["-t", "<fc=#6D9EAB><acstatus></fc> <watts> <timeleft><fc=yellow><left></fc>%",
                                     "-L", "10", "-H", "80", "-p", "3", "-n", "grey90",
                                     "--", "-O", "AC", "-o", "BAT",
                                     "-L", "-15", "-H", "-5",
                                     "-f", "AC/online",
-                                    "-l", "red", "-m", "lightblue", "-h", "green"] 50
-                    --, Run CoreTemp ["-t","<core4>","-L", "40", "-H", "65","-l", "lightblue", "-n", "gray90", "-h", "red"] 50
+                                    "-l", "red", "-m", "lightblue", "-h", "#DE4314"] 50
+                    , Run CoreTemp ["-t","<core0>C <core1>C"] 50
                     , Run DiskU [("/mnt/alot","<freep>%")] ["-L", "20", "-H", "50", "-m", "1", "-p", "3"] 50
-                    --, Run DiskIO [("/", "<read> <write>")] [] 30
+                    , Run DiskIO [("/mnt/alot", "<read> <write>"), ("/dev/mapper/hump--lvm-alot", "<total>")] [] 30
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       --, template = "%StdinReader% }{ %multicpu% > %memory% > <fc=#1992cf>WLAN0</fc> %wlan0wi% > %wlan0% > %date% > %battery%"
-       , template = "%StdinReader% }{ >> <fc=#1992fc>CPU</fc> %multicpu% > <fc=#1992cf>HDD</fc>%disku% > <fc=#1992cf>MEM</fc> %memory% > <fc=#1992cf>ETH0</fc> %eth0% > %date% > %battery%"
+       , template = "%StdinReader% }{ >> <fc=#6D9EAB>CPU</fc> %multicpu% %coretemp% > <fc=#6D9EAB>HDD</fc>%disku% %diskio% > <fc=#6D9EAB>MEM</fc> %memory% > <fc=#6D9EAB>DATE</fc> %date% > %battery%"
        }
