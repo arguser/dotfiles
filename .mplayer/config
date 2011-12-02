@@ -1,10 +1,18 @@
-# Write your default config options here!
+#MPlayer Configuration File
 
+#Subtitles#
+ass=yes
+ass-font-scale=1.6
+ass-color=ffff0000
+ass-use-margins=yes
 #Subtitle Encoding
 subcp=latin1
-#Audio Output
+
+#Audio Output#
 ao=pulse
-#Xmonad Fullscreen
+
+#Xmonad Fullscreen#
 fstype=none
-#Volume Normalization
+
+#Volume Normalization#
 af=volnorm
