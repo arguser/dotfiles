@@ -25,5 +25,5 @@ To Do:
 Work in Progress:
 
 * XMonad (~/.xmonad/xmonad.hs)
-* XMobar (~/.xmobarrc)
+* XMobar (~/.xmobarrc) & (~/.xmobar2rc)
 * dMenu-xft (spawn by XMonad)
