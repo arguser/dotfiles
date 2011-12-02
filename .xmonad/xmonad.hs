@@ -19,6 +19,10 @@ import XMonad
 -----------
 --No Borders
 import XMonad.Layout.NoBorders
+import XMonad.Layout.SimpleFloat
+
+--Grid
+import XMonad.Layout.Grid
 --Rezise
 import XMonad.Layout.ResizableTile
 --Tabs
@@ -83,7 +87,7 @@ myWorkspaces    = ["  1  ","  2  ","  3  ","  4  "]
 ---------------
 --Main Colors--
 ---------------
-myFgColor = "#1992cf"
+myFgColor = "#6D9EAB"
 myBgColor = "#202020"
 myHighlightedFgColor = "#FFFFFF"
 myHighlightedBgColor = myFgColor
@@ -92,15 +96,15 @@ myHighlightedBgColor = myFgColor
 --Workspaces Colors--
 ---------------------
 myCurrentWsFgColor = myHighlightedFgColor
-myCurrentWsBgColor = myHighlightedBgColor
-myVisibleWsFgColor = myHighlightedFgColor
-myVisibleWsBgColor = "#77C3E7"
+myCurrentWsBgColor = "#DE4314"
+myVisibleWsFgColor = "#DE4314"
+myVisibleWsBgColor = "#303030"
 myHiddenWsFgColor = "#909090"
-myHiddenWsBgColor = "#085D87"
+myHiddenWsBgColor = "#A62806"
 myHiddenEmptyWsFgColor = myHiddenWsFgColor
 myHiddenEmptyWsBgColor = myBgColor
-myUrgentWsFgColor = myHighlightedFgColor
-myUrgentWsBgColor = "#4FB5E7"
+myUrgentWsFgColor = myBgColor
+myUrgentWsBgColor = "#F0F0F0"
 myTitleFgColor = myFgColor
 -----------------
 --Border Colors--
@@ -124,6 +128,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0,0x1008ff2f			 ), spawn "xlock | sudo pm-suspend")
     -- Power for poweroff
     , ((0,0x1008ff2a			 ), spawn "sudo poweroff")
+    -- Autorandr for Displays
+    , ((0,0x1008ff59                     ), spawn "autorandr -c && sh .fehbg")
 
     -- screenshot screen
     , ((modm,               xK_Print     ), spawn "scrot -e 'mv $f ~/picts/shots'")
@@ -132,7 +138,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_Print     ), spawn "scrot -s -e'mv $f ~/picts/shots'")
 
     -- launch dmenu-xft
-    , ((modm,               xK_p     ), spawn "dmenu_run -nb '#202020' -nf grey70 -sb '#1992cf' -sf white -p wha? -fn 'Envy Code R:pixelsize=15'")
+    , ((modm,               xK_p     ), spawn "dmenu_run -nb '#202020' -nf grey70 -sb '#DE4314' -sf white -p wha? -fn 'Envy Code R:pixelsize=15'")
 
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
@@ -270,7 +276,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 ----------------------
 
 myLayout = smartBorders $ windowNavigation $ addTabs shrinkText tabTheme $
-            tall ||| mtall ||| full
+            tall ||| mtall ||| full ||| Grid ||| simpleFloat
                 where
                     rt = ResizableTall 1 (3/100) (1/2) []
                     tall = named "Tall" $ subLayout [0,1,2] (Simplest) $ rt
@@ -296,17 +302,19 @@ myLayout = smartBorders $ windowNavigation $ addTabs shrinkText tabTheme $
 --Windows Rules--
 -----------------
 
-myManageHook = composeAll [ isFullscreen                  --> doFullFloat
-                          , className =? "MPlayer"        --> doFloat
+myManageHook = composeAll [ -- isFullscreen                  --> doFullFloat
+                          className =? "MPlayer"        --> doFloat
                           , className =? "Gimp"           --> doFloat
                           , className =? "feh"            --> doFloat
                           , className =? "Nautilus"       --> doFloat
                           , className =? "Lazarus"        --> doFloat
+                          , resource =? "PlayOnLinux"    --> doFloat
+                          , resource  =? "VCLSalFrame"    --> doFloat
+                          , resource  =? "desktop"        --> doIgnore
                           , resource  =? "desktop_window" --> doIgnore
                           , resource  =? "kdesktop"       --> doIgnore
-                          , insertPosition    Below Newer
+                          , insertPosition    Above Newer
                           , transience'
-                          --, className =? "Firefox"        --> doShift "  1  "
                           ]
 
 --------------
@@ -316,7 +324,7 @@ myManageHook = composeAll [ isFullscreen                  --> doFullFloat
 tabTheme = defaultTheme { decoHeight = 14
                         , activeColor = "#303030"
                         , activeBorderColor = "#404040"
-                        , activeTextColor = "#1992cf"
+                        , activeTextColor = "#6D9EAB"
                         , inactiveTextColor = "#8f8f8f"
                         , inactiveColor = "#252525"
                         , inactiveBorderColor = "#404040"
@@ -325,7 +333,6 @@ tabTheme = defaultTheme { decoHeight = 14
 ---------------
 --Grid Config--
 ---------------
-
 myGSConfig = defaultGSConfig { gs_cellwidth = 160 }
 
 -- Event handling
@@ -391,6 +398,7 @@ myStartupHook = return ()
 ----------------------
 
 main = do
+  spawn "xmobar '.xmobar2rc'"
   xmproc <- spawnPipe "xmobar"
   xmonad $ withUrgencyHook NoUrgencyHook $ defaults {
          manageHook = manageDocks <+> manageHook defaults
@@ -399,7 +407,7 @@ main = do
 						  ppOutput = hPutStrLn xmproc
 						  , ppTitle = xmobarColor myTitleFgColor "" . shorten 40
 						  , ppCurrent = xmobarColor myCurrentWsFgColor myCurrentWsBgColor
-						  , ppVisible = xmobarColor myHighlightedFgColor myVisibleWsBgColor
+						  , ppVisible = xmobarColor myVisibleWsFgColor myVisibleWsBgColor
 						  , ppHidden = xmobarColor myHiddenWsFgColor myHiddenWsBgColor
 						  , ppHiddenNoWindows = xmobarColor myHiddenEmptyWsFgColor myHiddenEmptyWsBgColor
 						  , ppUrgent = xmobarColor myUrgentWsFgColor myUrgentWsBgColor . xmobarStrip
