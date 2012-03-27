@@ -14,13 +14,12 @@
 
 --Xmonad
 import XMonad
+import XMonad.Hooks.SetWMName
 -----------
 --Layouts--
 -----------
 --No Borders
 import XMonad.Layout.NoBorders
-import XMonad.Layout.SimpleFloat
-
 --Grid
 import XMonad.Layout.Grid
 --Rezise
@@ -121,11 +120,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
     -- lock screen
-    , ((0, 0x1008ff2d                    ), spawn "xlock")
+    , ((0, 0x1008ff2d                    ), spawn "slimlock")
     -- activate/deactivate bluetooth/wireless
     --, ((0, 0x1008ff95			 ), spawn "sudo set_rf")
     -- Fn+F5 suspends with pm-suspend
-    , ((0,0x1008ff2f			 ), spawn "xlock | sudo pm-suspend")
+    , ((0,0x1008ff2f			 ), spawn "slimlock | sudo pm-suspend")
     -- Power for poweroff
     , ((0,0x1008ff2a			 ), spawn "sudo poweroff")
     -- Autorandr for Displays
@@ -276,7 +275,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 ----------------------
 
 myLayout = smartBorders $ windowNavigation $ addTabs shrinkText tabTheme $
-            tall ||| mtall ||| full ||| Grid ||| simpleFloat
+            tall ||| mtall ||| full ||| Grid
                 where
                     rt = ResizableTall 1 (3/100) (1/2) []
                     tall = named "Tall" $ subLayout [0,1,2] (Simplest) $ rt
@@ -308,6 +307,7 @@ myManageHook = composeAll [ -- isFullscreen                  --> doFullFloat
                           , className =? "feh"            --> doFloat
                           , className =? "Nautilus"       --> doFloat
                           , className =? "Lazarus"        --> doFloat
+                          , resource =? "freeorion"      --> doFloat
                           , resource =? "PlayOnLinux"    --> doFloat
                           , resource  =? "VCLSalFrame"    --> doFloat
                           , resource  =? "desktop"        --> doIgnore
@@ -391,15 +391,15 @@ myLogHook = return ()
 --Startup Actions--
 -------------------
 
-myStartupHook = return ()
+myStartupHook = setWMName "LG3D"
 
 ----------------------
 --XMobar Integration--
 ----------------------
 
 main = do
-  spawn "xmobar '.xmobar2rc'"
   xmproc <- spawnPipe "xmobar"
+  spawnPipe "xmobar '.xmobar2rc'"
   xmonad $ withUrgencyHook NoUrgencyHook $ defaults {
          manageHook = manageDocks <+> manageHook defaults
          , layoutHook = avoidStruts $ layoutHook defaults
